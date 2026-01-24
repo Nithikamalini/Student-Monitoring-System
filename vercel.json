@@ -1,7 +1,7 @@
 {
     "version": 2,
     "name": "student-monitoring-system",
-    "framework": "vite",
+    "framework": null,
     "installCommand": "npm install",
     "buildCommand": "cd frontend && npm run build",
     "outputDirectory": "frontend/dist",
