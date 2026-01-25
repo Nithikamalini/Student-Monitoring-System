@@ -1,5 +1,4 @@
 # Student-Monitoring-System
-# 📘 Student Monitoring System
 
 A **MERN Stack–based Student Monitoring System** designed to manage students, attendance, and basic academic monitoring in an efficient and user-friendly way. This project is suitable for mini-projects, academic submissions, and learning full‑stack development.
 
@@ -152,5 +151,6 @@ This project is for **educational purposes only**.
 ---
 
 ✨ *Feel free to fork, modify, and enhance this project!*
+
 
 
