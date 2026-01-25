@@ -15,12 +15,17 @@ app.use(cors());
 app.use(express.json());
 
 // Database Connection
-mongoose.connect('mongodb://localhost:27017/student_monitoring')
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/student_monitoring';
+
+mongoose.connect(MONGODB_URI)
     .then(() => console.log('MongoDB Connected Successfully'))
     .catch(err => {
         console.error('MongoDB Connection Error:');
         console.error(err);
-        process.exit(1); // Exit on connection failure
+        // Do not exit in production, allow for retries or debugging
+        if (process.env.NODE_ENV !== 'production') {
+            process.exit(1);
+        }
     });
 
 // Routes
@@ -30,13 +35,22 @@ const authRoutes = require('./routes/authRoutes');
 app.use('/api/students', studentRoutes);
 app.use('/api/auth', authRoutes);
 
-// Serve Frontend Static Files
-const __dirname_resolved = path.resolve();
-app.use(express.static(path.join(__dirname_resolved, '../frontend/dist')));
+// Serve Frontend Static Files (Deployment Helper)
+// In production (e.g. Render/Heroku), the backend can serve the built frontend
+if (process.env.NODE_ENV === 'production') {
+    // __dirname is the directory of this file (backend folder)
+    const frontendPath = path.join(__dirname, '..', 'frontend', 'dist');
 
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname_resolved, '../frontend/dist/index.html'));
-});
+    app.use(express.static(frontendPath));
+
+    app.get('*', (req, res) => {
+        res.sendFile(path.join(frontendPath, 'index.html'));
+    });
+} else {
+    app.get('/', (req, res) => {
+        res.send('API is running...');
+    });
+}
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
