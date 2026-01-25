@@ -150,7 +150,7 @@ This project is for **educational purposes only**.
 
 ---
 
-✨ *Feel free to fork, modify, and enhance this project!*
+
 
 
 
