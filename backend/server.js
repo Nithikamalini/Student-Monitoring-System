@@ -37,21 +37,29 @@ app.use('/api/auth', authRoutes);
 
 // Serve Frontend Static Files (Deployment Helper)
 // In production (e.g. Render/Heroku), the backend can serve the built frontend
-if (process.env.NODE_ENV === 'production') {
+// On Vercel, this is handled by vercel.json rewrites
+if (process.env.NODE_ENV === 'production' && !process.env.VERCEL) {
     // __dirname is the directory of this file (backend folder)
     const frontendPath = path.join(__dirname, '..', 'frontend', 'dist');
 
     app.use(express.static(frontendPath));
 
     app.get('*', (req, res) => {
-        res.sendFile(path.join(frontendPath, 'index.html'));
+        // Only serve index.html if it's not an API request
+        if (!req.path.startsWith('/api')) {
+            res.sendFile(path.join(frontendPath, 'index.html'));
+        }
     });
 } else {
     app.get('/', (req, res) => {
-        res.send('API is running...');
+        res.json({ message: 'Student Monitoring System API is running...', env: process.env.NODE_ENV });
     });
 }
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+    });
+}
+
+module.exports = app;

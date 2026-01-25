@@ -10,6 +10,7 @@
             "src": "frontend/package.json",
             "use": "@vercel/static-build",
             "config": {
+                "skipOffline": true,
                 "distDir": "dist"
             }
         }
@@ -21,7 +22,11 @@
         },
         {
             "source": "/(.*)",
-            "destination": "frontend/$1"
+            "destination": "/$1"
+        },
+        {
+            "source": "/(.*)",
+            "destination": "/index.html"
         }
     ]
 }
