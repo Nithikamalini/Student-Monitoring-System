@@ -117,7 +117,8 @@ Make sure MongoDB is running locally or use MongoDB Atlas.
 
 ## 📸 Screenshots
 
-<img width="1796" height="867" alt="image" src="https://github.com/user-attachments/assets/588a32fa-50a7-4cf5-98ed-d7a0b258926d" />                                                                               <img width="1855" height="846" alt="image" src="https://github.com/user-attachments/assets/bd0cb361-ec01-4a92-bdf4-d1bc44fab2e7" />
+<img width="1796" height="867" alt="image" src="https://github.com/user-attachments/assets/588a32fa-50a7-4cf5-98ed-d7a0b258926d" />                                                                               <img width="1855" height="846" alt="image" src="https://github.com/user-attachments/assets/bd0cb361-ec01-4a92-bdf4-d1bc44fab2e7" />                                                                                <img width="1895" height="907" alt="image" src="https://github.com/user-attachments/assets/023724e1-558e-4ba2-a139-07327cf918ac" />
+
                                                                                
 
 
@@ -149,6 +150,7 @@ Thanks to open‑source tools and learning resources that helped build this proj
 ## 📄 License
 
 This project is for **educational purposes only**.
+
 
 
 
