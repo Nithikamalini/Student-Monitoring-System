@@ -117,7 +117,8 @@ Make sure MongoDB is running locally or use MongoDB Atlas.
 
 ## 📸 Screenshots
 
-(Add screenshots of your UI here)
+<img width="1796" height="867" alt="image" src="https://github.com/user-attachments/assets/588a32fa-50a7-4cf5-98ed-d7a0b258926d" />                                                                                 
+
 
 ---
 
@@ -147,6 +148,7 @@ Thanks to open‑source tools and learning resources that helped build this proj
 ## 📄 License
 
 This project is for **educational purposes only**.
+
 
 
 
