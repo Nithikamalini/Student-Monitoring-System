@@ -43,7 +43,11 @@ router.post('/login', async (req, res) => {
             res.json({ token, user: { id: user.id, email: user.email, role: user.role } });
         });
     } catch (err) {
-        res.status(500).send('Server Error');
+        console.error("Login Route Error:", err);
+        if (err.name === 'MongooseServerSelectionError' || err.message.includes('buffering timed out')) {
+            return res.status(503).json({ msg: 'Database down. Please start MongoDB.' });
+        }
+        res.status(500).json({ msg: 'Server Error: ' + err.message });
     }
 });
 

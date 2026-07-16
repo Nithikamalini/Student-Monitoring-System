@@ -61,6 +61,27 @@ router.post('/attendance', async (req, res) => {
     }
 });
 
+// Bulk Mark Attendance
+router.post('/attendance/bulk', async (req, res) => {
+    try {
+        const { date, records } = req.body; // records is array of { studentId, status }
+        if (!records || !Array.isArray(records) || !date) {
+            return res.status(400).json({ error: "Invalid data format" });
+        }
+        
+        const attendanceDocs = records.map(record => ({
+            studentId: record.studentId,
+            date: date,
+            status: record.status
+        }));
+        
+        await Attendance.insertMany(attendanceDocs);
+        res.status(201).json({ msg: "Bulk attendance recorded successfully" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 // Add Marks
 router.post('/marks', async (req, res) => {
     try {
@@ -68,6 +89,28 @@ router.post('/marks', async (req, res) => {
         const newMarks = new Marks({ studentId, subject, score, total });
         await newMarks.save();
         res.status(201).json(newMarks);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Bulk Add Marks
+router.post('/marks/bulk', async (req, res) => {
+    try {
+        const { subject, total, records } = req.body; // records is array of { studentId, score }
+        if (!records || !Array.isArray(records) || !subject || !total) {
+            return res.status(400).json({ error: "Invalid data format" });
+        }
+        
+        const marksDocs = records.map(record => ({
+            studentId: record.studentId,
+            subject: subject,
+            score: record.score,
+            total: total
+        }));
+        
+        await Marks.insertMany(marksDocs);
+        res.status(201).json({ msg: "Bulk marks recorded successfully" });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

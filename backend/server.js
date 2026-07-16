@@ -24,7 +24,9 @@ mongoose.connect(MONGODB_URI)
         console.error(err);
         // Do not exit in production, allow for retries or debugging
         if (process.env.NODE_ENV !== 'production') {
-            process.exit(1);
+            // process.exit(1);
+            console.error("!!! DATABASE CONNECTION FAILED !!!");
+            console.error("Please make sure MongoDB is running.");
         }
     });
 
@@ -57,8 +59,17 @@ if (process.env.NODE_ENV === 'production' && !process.env.VERCEL) {
 }
 
 if (process.env.NODE_ENV !== 'production') {
-    app.listen(PORT, () => {
+    const server = app.listen(PORT, () => {
         console.log(`Server running on port ${PORT}`);
+    });
+
+    server.on('error', (e) => {
+        if (e.code === 'EADDRINUSE') {
+            console.error(`⚠️  Port ${PORT} is already in use!`);
+            console.error(`   Please run: npx kill-port ${PORT}`);
+        } else {
+            console.error("Server Error:", e);
+        }
     });
 }
 
