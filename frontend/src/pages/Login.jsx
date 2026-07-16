@@ -24,8 +24,6 @@ const Login = () => {
 
         if (success) {
             navigate('/');
-        } else {
-            alert('Authentication Failed');
         }
     };
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../services/api';
 
 const EditStudentModal = ({ student, onClose, onUpdate }) => {
     const [formData, setFormData] = useState({
@@ -21,7 +21,7 @@ const EditStudentModal = ({ student, onClose, onUpdate }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.put(`/api/students/${student._id}`, formData);
+            await api.put(`/api/students/${student._id}`, formData);
             onUpdate();
             onClose();
         } catch (error) {

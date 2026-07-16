@@ -5,6 +5,8 @@ import AddStudentForm from '../components/AddStudentForm';
 import RecordActionModal from '../components/RecordActionModal';
 import EditStudentModal from '../components/EditStudentModal';
 import DashboardCharts from '../components/DashboardCharts';
+import BulkAttendanceModal from '../components/BulkAttendanceModal';
+import BulkMarksModal from '../components/BulkMarksModal';
 
 const Dashboard = () => {
     const { user } = useContext(AuthContext);
@@ -13,6 +15,8 @@ const Dashboard = () => {
     const [editingStudent, setEditingStudent] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('All');
+    const [showBulkAttendance, setShowBulkAttendance] = useState(false);
+    const [showBulkMarks, setShowBulkMarks] = useState(false);
     const fileInputRef = React.useRef(null);
 
     const isAdmin = user && user.role === 'admin';
@@ -216,6 +220,18 @@ const Dashboard = () => {
                             >
                                 <span>Export CSV</span>
                             </button>
+                            <button
+                                onClick={() => setShowBulkAttendance(true)}
+                                className="bg-indigo-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition flex items-center gap-2 shadow-lg hover:shadow-indigo-200 dark:hover:shadow-none"
+                            >
+                                📝 Attendance
+                            </button>
+                            <button
+                                onClick={() => setShowBulkMarks(true)}
+                                className="bg-amber-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-amber-700 transition flex items-center gap-2 shadow-lg hover:shadow-amber-200 dark:hover:shadow-none"
+                            >
+                                💯 Marks
+                            </button>
                         </div>
                     )}
                     {isAdmin && <AddStudentForm onStudentAdded={fetchStudents} />}
@@ -328,6 +344,20 @@ const Dashboard = () => {
                 <EditStudentModal
                     student={editingStudent}
                     onClose={() => setEditingStudent(null)}
+                    onUpdate={fetchStudents}
+                />
+            )}
+            {showBulkAttendance && (
+                <BulkAttendanceModal
+                    students={sortedStudents}
+                    onClose={() => setShowBulkAttendance(false)}
+                    onUpdate={fetchStudents}
+                />
+            )}
+            {showBulkMarks && (
+                <BulkMarksModal
+                    students={sortedStudents}
+                    onClose={() => setShowBulkMarks(false)}
                     onUpdate={fetchStudents}
                 />
             )}
