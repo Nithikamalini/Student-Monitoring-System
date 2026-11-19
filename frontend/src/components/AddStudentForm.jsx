@@ -5,7 +5,9 @@ const AddStudentForm = ({ onStudentAdded }) => {
     const [formData, setFormData] = useState({
         name: '',
         rollNumber: '',
-        email: ''
+        email: '',
+        attendancePercentage: '',
+        averageMarks: ''
     });
 
     const handleChange = (e) => {
@@ -16,7 +18,7 @@ const AddStudentForm = ({ onStudentAdded }) => {
         e.preventDefault();
         try {
             await axios.post('/api/students/register', formData);
-            setFormData({ name: '', rollNumber: '', email: '' });
+            setFormData({ name: '', rollNumber: '', email: '', attendancePercentage: '', averageMarks: '' });
             onStudentAdded(); // Refresh list
             alert('Student Added Successfully');
         } catch (error) {
@@ -28,7 +30,7 @@ const AddStudentForm = ({ onStudentAdded }) => {
     return (
         <form onSubmit={handleSubmit} className="mb-6 bg-blue-50/40 dark:bg-slate-800 p-6 rounded-2xl shadow-xl border border-blue-100 dark:border-slate-700 transition-colors">
             <h2 className="text-xl font-bold mb-4 text-slate-800 dark:text-white">Add New Student</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
                 <input
                     type="text"
                     name="name"
@@ -55,6 +57,28 @@ const AddStudentForm = ({ onStudentAdded }) => {
                     onChange={handleChange}
                     className="p-3 border border-blue-100 dark:border-slate-700 bg-white/50 dark:bg-slate-900 text-slate-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                     required
+                />
+                <input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    max="100"
+                    name="attendancePercentage"
+                    placeholder="Attendance % (Optional)"
+                    value={formData.attendancePercentage}
+                    onChange={handleChange}
+                    className="p-3 border border-emerald-200 dark:border-emerald-800/50 bg-white/50 dark:bg-slate-900 text-slate-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all"
+                />
+                <input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    max="100"
+                    name="averageMarks"
+                    placeholder="Avg Marks % (Optional)"
+                    value={formData.averageMarks}
+                    onChange={handleChange}
+                    className="p-3 border border-blue-200 dark:border-blue-800/50 bg-white/50 dark:bg-slate-900 text-slate-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                 />
             </div>
             <button

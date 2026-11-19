@@ -15,6 +15,14 @@ const studentSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
+    attendancePercentage: {
+        type: Number,
+        default: null
+    },
+    averageMarks: {
+        type: Number,
+        default: null
+    },
     createdAt: {
         type: Date,
         default: Date.now

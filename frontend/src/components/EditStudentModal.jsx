@@ -5,15 +5,19 @@ const EditStudentModal = ({ student, onClose, onUpdate }) => {
     const [formData, setFormData] = useState({
         name: '',
         rollNumber: '',
-        email: ''
+        email: '',
+        attendancePercentage: '',
+        averageMarks: ''
     });
 
     useEffect(() => {
         if (student) {
             setFormData({
-                name: student.name,
-                rollNumber: student.rollNumber,
-                email: student.email
+                name: student.name || '',
+                rollNumber: student.rollNumber || '',
+                email: student.email || '',
+                attendancePercentage: student.attendancePercentage !== undefined ? student.attendancePercentage : '',
+                averageMarks: student.averageMarks !== undefined ? student.averageMarks : ''
             });
         }
     }, [student]);
@@ -33,10 +37,13 @@ const EditStudentModal = ({ student, onClose, onUpdate }) => {
     if (!student) return null;
 
     return (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex justify-center items-center z-50">
-            <div className="bg-blue-50/95 dark:bg-slate-900 p-8 rounded-[2rem] shadow-2xl w-full max-w-md border border-blue-200 dark:border-slate-700 transform transition-all">
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex justify-center items-center z-50 p-4">
+            <div className="bg-blue-50/95 dark:bg-slate-900 p-8 rounded-[2rem] shadow-2xl w-full max-w-lg border border-blue-200 dark:border-slate-700 transform transition-all max-h-[90vh] overflow-y-auto">
                 <div className="flex justify-between items-center mb-6">
-                    <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight italic">Edit Student Profile</h3>
+                    <div>
+                        <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight italic">Edit Student Profile</h3>
+                        <p className="text-xs font-semibold text-slate-400 mt-0.5">Update personal details, attendance, or average marks</p>
+                    </div>
                     <button onClick={onClose} className="text-slate-400 hover:text-blue-600 transition-colors p-2 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-full">
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
@@ -44,42 +51,75 @@ const EditStudentModal = ({ student, onClose, onUpdate }) => {
                     </button>
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-5">
+                <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                        <label className="block text-sm font-bold text-slate-500 dark:text-blue-400 mb-1 ml-1 uppercase tracking-widest">Full Name</label>
+                        <label className="block text-xs font-bold text-slate-500 dark:text-blue-400 mb-1 ml-1 uppercase tracking-widest">Full Name</label>
                         <input
                             type="text"
                             placeholder="e.g. John Doe"
-                            className="w-full p-3.5 border border-blue-100 dark:border-slate-700 bg-white/50 dark:bg-slate-800 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white"
+                            className="w-full p-3.5 border border-blue-100 dark:border-slate-700 bg-white/50 dark:bg-slate-800 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white font-medium"
                             value={formData.name}
                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                             required
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-bold text-slate-500 dark:text-blue-400 mb-1 ml-1 uppercase tracking-widest">Roll Number</label>
+                        <label className="block text-xs font-bold text-slate-500 dark:text-blue-400 mb-1 ml-1 uppercase tracking-widest">Roll Number</label>
                         <input
                             type="text"
                             placeholder="e.g. BT123"
-                            className="w-full p-3.5 border border-blue-100 dark:border-slate-700 bg-white/50 dark:bg-slate-800 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white"
+                            className="w-full p-3.5 border border-blue-100 dark:border-slate-700 bg-white/50 dark:bg-slate-800 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white font-medium"
                             value={formData.rollNumber}
                             onChange={(e) => setFormData({ ...formData, rollNumber: e.target.value })}
                             required
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-bold text-slate-500 dark:text-blue-400 mb-1 ml-1 uppercase tracking-widest">Email Address</label>
+                        <label className="block text-xs font-bold text-slate-500 dark:text-blue-400 mb-1 ml-1 uppercase tracking-widest">Email Address</label>
                         <input
                             type="email"
                             placeholder="john@example.com"
-                            className="w-full p-3.5 border border-blue-100 dark:border-slate-700 bg-white/50 dark:bg-slate-800 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white"
+                            className="w-full p-3.5 border border-blue-100 dark:border-slate-700 bg-white/50 dark:bg-slate-800 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white font-medium"
                             value={formData.email}
                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                             required
                         />
                     </div>
 
-                    <div className="flex gap-4 mt-8">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                        <div>
+                            <label className="block text-xs font-bold text-emerald-600 dark:text-emerald-400 mb-1 ml-1 uppercase tracking-widest">
+                                Attendance (%)
+                            </label>
+                            <input
+                                type="number"
+                                step="0.01"
+                                min="0"
+                                max="100"
+                                placeholder="e.g. 85.5"
+                                className="w-full p-3.5 border border-emerald-200 dark:border-emerald-800/50 bg-white/50 dark:bg-slate-800 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all dark:text-white font-black text-emerald-600 dark:text-emerald-400"
+                                value={formData.attendancePercentage}
+                                onChange={(e) => setFormData({ ...formData, attendancePercentage: e.target.value })}
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-xs font-bold text-blue-600 dark:text-blue-400 mb-1 ml-1 uppercase tracking-widest">
+                                Average Marks (%)
+                            </label>
+                            <input
+                                type="number"
+                                step="0.01"
+                                min="0"
+                                max="100"
+                                placeholder="e.g. 78.0"
+                                className="w-full p-3.5 border border-blue-200 dark:border-blue-800/50 bg-white/50 dark:bg-slate-800 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white font-black text-blue-600 dark:text-blue-400"
+                                value={formData.averageMarks}
+                                onChange={(e) => setFormData({ ...formData, averageMarks: e.target.value })}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="flex gap-4 mt-8 pt-2">
                         <button
                             type="button"
                             onClick={onClose}
