@@ -41,9 +41,12 @@ app.get('/api/health', (req, res) => {
     res.json({ status: 'ok', message: 'API is running smoothly' });
 });
 
-// Serve Frontend Static Files if built, otherwise provide API status
-const frontendPath = path.join(__dirname, '..', 'frontend', 'dist');
-if (fs.existsSync(frontendPath)) {
+// Serve Frontend Static Files
+const localDist = path.join(__dirname, 'dist');
+const parentDist = path.join(__dirname, '..', 'frontend', 'dist');
+const frontendPath = fs.existsSync(localDist) ? localDist : (fs.existsSync(parentDist) ? parentDist : null);
+
+if (frontendPath) {
     app.use(express.static(frontendPath));
     app.get('*', (req, res) => {
         if (!req.path.startsWith('/api')) {
