@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
+const fs = require('fs');
 
 dotenv.config();
 
@@ -22,9 +23,7 @@ mongoose.connect(MONGODB_URI)
     .catch(err => {
         console.error('MongoDB Connection Error:');
         console.error(err);
-        // Do not exit in production, allow for retries or debugging
         if (process.env.NODE_ENV !== 'production') {
-            // process.exit(1);
             console.error("!!! DATABASE CONNECTION FAILED !!!");
             console.error("Please make sure MongoDB is running.");
         }
@@ -37,17 +36,16 @@ const authRoutes = require('./routes/authRoutes');
 app.use('/api/students', studentRoutes);
 app.use('/api/auth', authRoutes);
 
-// Serve Frontend Static Files (Deployment Helper)
-// In production (e.g. Render/Heroku), the backend can serve the built frontend
-// On Vercel, this is handled by vercel.json rewrites
-if (process.env.NODE_ENV === 'production' && !process.env.VERCEL) {
-    // __dirname is the directory of this file (backend folder)
-    const frontendPath = path.join(__dirname, '..', 'frontend', 'dist');
+// Root health check
+app.get('/api/health', (req, res) => {
+    res.json({ status: 'ok', message: 'API is running smoothly' });
+});
 
+// Serve Frontend Static Files if built, otherwise provide API status
+const frontendPath = path.join(__dirname, '..', 'frontend', 'dist');
+if (fs.existsSync(frontendPath)) {
     app.use(express.static(frontendPath));
-
     app.get('*', (req, res) => {
-        // Only serve index.html if it's not an API request
         if (!req.path.startsWith('/api')) {
             res.sendFile(path.join(frontendPath, 'index.html'));
         }
@@ -58,7 +56,8 @@ if (process.env.NODE_ENV === 'production' && !process.env.VERCEL) {
     });
 }
 
-if (process.env.NODE_ENV !== 'production') {
+// Always start the server unless running in Vercel Serverless environment
+if (!process.env.VERCEL) {
     const server = app.listen(PORT, () => {
         console.log(`Server running on port ${PORT}`);
     });
